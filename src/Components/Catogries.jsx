@@ -108,14 +108,14 @@ const startScroll = () => {
   // ✅ Button Controls
   const scrollLeft = () => {
     scrollRef.current?.scrollBy({
-      left: -200,
+      left: -210,
       behavior: "smooth",
     });
   };
 
   const scrollRight = () => {
     scrollRef.current?.scrollBy({
-      left: 200,
+      left: 210,
       behavior: "smooth",
     });
   };
@@ -163,7 +163,7 @@ const startScroll = () => {
             key={index}
                          onClick={() => router.push("/products")}
 
-            className="group relative min-w-[176px] min-h-[216px] mb-[30px] bg-white border border-gray-400 rounded-xl p-4 flex flex-col items-center justify-center transition-all duration-300  shadow-sm hover:shadow-lg transition hover:-translate-y-2 hover:border-gray-500"
+            className="group relative min-w-[186px] min-h-[216px] mb-[30px] bg-white border border-gray-400 rounded-xl p-4 flex flex-col items-center justify-center transition-all duration-300  shadow-sm hover:shadow-lg transition hover:-translate-y-2 hover:border-gray-500"
           >
              {/* 🔹 Content Wrapper (move UP) */}
   <div className="flex flex-col items-center transition-all duration-300 group-hover:-translate-y-6">
