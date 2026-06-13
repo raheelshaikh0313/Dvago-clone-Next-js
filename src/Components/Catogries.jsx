@@ -86,7 +86,7 @@ const startScroll = () => {
       const container = scrollRef.current;
 
       container.scrollBy({
-        left: 200,
+        left: 210,
         behavior: "smooth",
       });
 
