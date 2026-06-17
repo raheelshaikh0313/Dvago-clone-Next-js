@@ -26,15 +26,21 @@ function AdminPanel() {
     const [editId, setEditId] = useState(null);
 
     // AUTH CHECK
-    useEffect(() => {
-        const admin = localStorage.getItem("admin");
+   useEffect(() => {
+  const admin = JSON.parse(
+    localStorage.getItem("admin")
+  );
 
-        if (!admin) {
-            router.push("/admin");
-        }
+  if (
+    !admin ||
+    admin.email !== "admin@gmail.com"
+  ) {
+    router.push("/admin");
+    return;
+  }
 
-        getProducts();
-    }, []);
+  getProducts();
+}, []);
 
     // GET PRODUCTS
     const getProducts = async () => {
@@ -134,22 +140,18 @@ function AdminPanel() {
     };
 
     // LOGOUT
-   const logout = async () => {
-
+ const logout = async () => {
   await supabase.auth.signOut();
 
   localStorage.removeItem("admin");
 
-  toast.success("Logged out");
-  window.location.href = "/admin";
-  router.push("/admin");
-  
+  toast.success("Logged Out");
 
+  router.push("/admin");
 };
 
     return (
         <div className="min-h-screen bg-[#f6fff0] p-8">
-            {/* Header */}
             <div className="mb-10 flex items-center justify-between">
                 <div>
                     <h1 className="text-4xl font-bold text-[#8DC63F]">
@@ -181,14 +183,12 @@ function AdminPanel() {
 </div>
             </div>
 
-            {/* Form */}
             <div className="rounded-3xl bg-white p-8 shadow-md">
                 <h2 className="mb-6 text-2xl font-semibold text-gray-800">
                     {editId ? "Update Product" : "Add New Product"}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-6">
-                    {/* Product Name */}
                     <input
                         type="text"
                         placeholder="Product Name"
@@ -202,7 +202,6 @@ function AdminPanel() {
                         className="h-14 rounded-2xl border border-gray-200 px-5 outline-none focus:border-[#8DC63F]"
                     />
 
-                    {/* Price */}
                     <input
                         type="number"
                         placeholder="Price"
@@ -216,7 +215,6 @@ function AdminPanel() {
                         className="h-14 rounded-2xl border border-gray-200 px-5 outline-none focus:border-[#8DC63F]"
                     />
 
-                    {/* Stock */}
                     <input
                         type="number"
                         placeholder="Stock"
@@ -230,7 +228,6 @@ function AdminPanel() {
                         className="h-14 rounded-2xl border border-gray-200 px-5 outline-none focus:border-[#8DC63F]"
                     />
 
-                    {/* Image URL */}
                     <input
                         type="text"
                         placeholder="Image URL"
@@ -256,7 +253,6 @@ function AdminPanel() {
                     />
                 </div>
 
-                {/* Button */}
                 <button
                     onClick={editId ? updateProduct : addProduct}
                     className="mt-8 rounded-2xl bg-[#8DC63F] px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:scale-105"
@@ -265,7 +261,6 @@ function AdminPanel() {
                 </button>
             </div>
 
-            {/* Product Table */}
             <div className="mt-10 rounded-3xl bg-white p-8 shadow-md">
                 <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-2xl font-semibold text-gray-800">
@@ -277,7 +272,6 @@ function AdminPanel() {
                     </div>
                 </div>
 
-                {/* Table */}
                 <div className="overflow-x-auto">
                     <table className="w-full border-separate border-spacing-y-4">
                         <thead>
@@ -297,7 +291,6 @@ function AdminPanel() {
                                         key={`${v.name}-${i}`}
                                         className="rounded-2xl bg-[#f9fff5] shadow-sm"
                                     >
-                                        {/* IMAGE */}
                                         <td className="rounded-l-2xl p-4">
                                             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl border bg-white">
                                                 <img
@@ -308,27 +301,22 @@ function AdminPanel() {
                                             </div>
                                         </td>
 
-                                        {/* NAME */}
                                         <td className="p-4 text-lg font-medium text-gray-700">
                                             {v.name}
                                         </td>
 
-                                        {/* PRICE */}
                                         <td className="p-4 text-lg font-bold text-[#8DC63F]">
                                             Rs. {v.price}
                                         </td>
 
-                                        {/* STOCK */}
                                         <td className="p-4">
                                             <span className="rounded-xl bg-[#8DC63F]/10 px-4 py-2 text-sm font-medium text-[#8DC63F]">
                                                 {v.stock} In Stock
                                             </span>
                                         </td>
 
-                                        {/* ACTIONS */}
                                         <td className="rounded-r-2xl p-4">
                                             <div className="flex items-center gap-3">
-                                                {/* Edit */}
                                                 <button
                                                     onClick={() => editProduct(v)}
                                                     className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 text-white transition-all duration-300 hover:scale-105"
@@ -336,7 +324,6 @@ function AdminPanel() {
                                                     <IoPencil size={18} />
                                                 </button>
 
-                                                {/* Delete */}
                                                 <button
                                                     onClick={() => deleteProduct(v.id)}
                                                     className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500 text-white transition-all duration-300 hover:scale-105"

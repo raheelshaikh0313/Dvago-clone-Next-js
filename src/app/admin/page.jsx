@@ -21,38 +21,56 @@ export default function AdminLogin() {
     }
   }, []);
 
-  const loginAdmin = async () => {
-    if (!email || !password) {
-      alert("Fill all fields");
-      return;
-    }
+ const loginAdmin = async () => {
+  if (!email || !password) {
+    toast.error("Fill all fields");
+    return;
+  }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+  // Only Admin Email Allowed
+  if (email !== "admin@gmail.com") {
+    toast.error("Access Denied");
+    return;
+  }
+
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+  if (error) {
+    toast.error(error.message);
+    return;
+  }
 
-    // Save Login
-    localStorage.setItem("admin", JSON.stringify(data.user));
-    toast.success("Login successful");
-    router.push("/admin/add-product");
-  };
+  // Double Check
+  if (data.user.email !== "admin@gmail.com") {
+    toast.error("Unauthorized Access");
+
+    await supabase.auth.signOut();
+
+    return;
+  }
+
+  localStorage.setItem(
+    "admin",
+    JSON.stringify(data.user)
+  );
+
+  toast.success("Admin Login Successful");
+
+  router.push("/admin/add-product");
+};
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5ffe9] px-6">
       <div className="w-full max-w-md rounded-3xl bg-white p-10 shadow-xl">
         
-        {/* Icon */}
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#8DC63F]/10">
           <IoShieldCheckmarkOutline size={40} className="text-[#8DC63F]" />
         </div>
 
-        {/* Heading */}
         <h1 className="mt-6 text-center text-4xl font-bold text-gray-800">
           Admin Login
         </h1>
@@ -60,8 +78,6 @@ export default function AdminLogin() {
         <p className="mt-3 text-center text-gray-500">
           DVAGO Admin Dashboard Access
         </p>
-
-        {/* Inputs */}
         <div className="mt-8 space-y-5">
           <input
             type="email"
@@ -80,7 +96,6 @@ export default function AdminLogin() {
           />
         </div>
 
-        {/* Button */}
         <button
           onClick={loginAdmin}
           className="mt-8 h-14 w-full rounded-2xl bg-[#8DC63F] text-lg font-semibold text-white transition-all duration-300 hover:scale-[1.02]"
